@@ -1,0 +1,34 @@
+{
+  "name": "auth-jwt",
+  "version": "0.0.5",
+  "description": "Biblioteca de autenticação simples via JWT",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "engines": {
+    "node": ">= 5.0.0"
+  },
+  "maintainers": [
+    {
+      "name": "wallace Silva",
+      "email": "wsilva@gmail.com"
+    }
+  ],
+  "keywords": [
+    "JSON",
+    "JWT",
+    "Autenticate",
+    "Token",
+    "Web"
+  ],
+  "author": "wallace silva <wsilva@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jwt-simple": "^0.4.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
+}
