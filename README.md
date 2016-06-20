@@ -35,7 +35,7 @@ app.get('/user', auth, (req, res) =>{
 Inclua o token criado pelo JWT no header das requisições
 
     Authorization: JWT JSON_WEB_TOKEN_STRING.....
-    
+
 or 
 
     Authorization: Bearer JSON_WEB_TOKEN_STRING.....
