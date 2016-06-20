@@ -1,6 +1,6 @@
 {
   "name": "auth-jwt",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "Biblioteca de autenticação simples via JWT",
   "main": "index.js",
   "scripts": {
@@ -20,14 +20,20 @@
     "JWT",
     "Autenticate",
     "Token",
-    "Web"
+    "Web",
+    "Bearer"
   ],
   "author": "wallace silva <wsilva@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "jwt-simple": "^0.4.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jovemnf/auth-jwt.git"
+  },
   "devDependencies": {
+    "assert": "^1.4.1",
     "chai": "^3.5.0",
     "mocha": "^2.4.5"
   }

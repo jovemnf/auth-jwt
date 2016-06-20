@@ -14,7 +14,7 @@ describe('Verify', function() {
 
         var req = {
             headers : {}
-        }
+        };
 
         auth.verify(req, null)
             .then(()=>{
@@ -32,7 +32,7 @@ describe('Verify', function() {
             headers : {
                 authorization : 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
             }
-        }
+        };
 
         return auth.verify(req, 'xxx')
             .then((retorno)=>{
@@ -46,13 +46,13 @@ describe('Verify', function() {
 
     });
 
-    it('precisa ser JWT para funcionar', function() {
+    it('precisa ser JWT ou Bearer para funcionar - teste JWT', function() {
 
         var req = {
             headers : {
                 authorization : 'jwt eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
             }
-        }
+        };
 
         return auth.verify(req, 'xxx')
             .then((retorno)=>{
@@ -60,6 +60,26 @@ describe('Verify', function() {
             })
             .catch((e)=>{
                 assert.equal(e.name,'Error');
+            })
+
+    });
+
+    it('precisa ser JWT ou Bearer para funcionar - Teste Bearer', function() {
+
+        var req = {
+            headers : {
+                authorization : 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
+            }
+        };
+
+        return auth.verify(req, 'xxx')
+            .then((retorno)=>{
+                if (retorno.foo != 'bar'){
+                    throw new Error("Retornou valor errado");
+                }
+            })
+            .catch((e)=>{
+                throw e;
             })
 
     });
