@@ -7,7 +7,7 @@
     "test": "mocha test/*.js"
   },
   "engines": {
-    "node": ">= 5.0.0"
+    "node": ">= 6.0.0"
   },
   "maintainers": [
     {
