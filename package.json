@@ -11,8 +11,8 @@
   },
   "maintainers": [
     {
-      "name": "wallace Silva",
-      "email": "wsilva@gmail.com"
+      "name": "Wallace Silva",
+      "email": "wsilvasjb@gmail.com"
     }
   ],
   "keywords": [
@@ -23,7 +23,7 @@
     "Web",
     "Bearer"
   ],
-  "author": "wallace silva <wsilva@gmail.com>",
+  "author": "Wallace Silva <wsilvasjb@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "jwt-simple": "^0.4.1"
