@@ -1,18 +1,18 @@
-var auth = require('../index');
+let auth = require('../index');
 
-var assert = require('assert');
-var expect = require('chai').expect;
+let assert = require('assert');
+let expect = require('chai').expect;
 
-describe('Verify', function() {
+describe('Verify', () => {
 
     /*
     it('should be named authorization', function() {
         assert.equal(auth.getAuthHeader(),'authorization');
     });*/
 
-    it('precisa ser falso para funcionar', function() {
+    it('precisa ser falso para funcionar', () => {
 
-        var req = {
+        let req = {
             headers : {}
         };
 
@@ -26,9 +26,9 @@ describe('Verify', function() {
 
     });
 
-    it('precisa ser verdadeiro para funcionar', function() {
-
-        var req = {
+    it('precisa ser verdadeiro para funcionar', () => {
+    
+        let req = {
             headers : {
                 authorization : 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
             }
@@ -36,7 +36,7 @@ describe('Verify', function() {
 
         return auth.verify(req, 'xxx')
             .then((retorno)=>{
-                if (retorno.foo != 'bar'){
+                if (retorno.foo !== 'bar'){
                     throw new Error("Retornou valor errado");
                 }
             })
@@ -46,9 +46,9 @@ describe('Verify', function() {
 
     });
 
-    it('precisa ser JWT ou Bearer para funcionar - teste JWT', function() {
+    it('precisa ser JWT ou Bearer para funcionar - teste JWT', () => {
 
-        var req = {
+        let req = {
             headers : {
                 authorization : 'jwt eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
             }
@@ -66,7 +66,7 @@ describe('Verify', function() {
 
     it('precisa ser JWT ou Bearer para funcionar - Teste Bearer', function() {
 
-        var req = {
+        let req = {
             headers : {
                 authorization : 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
             }
@@ -74,7 +74,7 @@ describe('Verify', function() {
 
         return auth.verify(req, 'xxx')
             .then((retorno)=>{
-                if (retorno.foo != 'bar'){
+                if (retorno.foo !== 'bar'){
                     throw new Error("Retornou valor errado");
                 }
             })
@@ -82,6 +82,26 @@ describe('Verify', function() {
                 throw e;
             })
 
+    });
+    
+    it('precisa ser verdadeiro para funcionar com getToken', () => {
+        
+        let req = {
+            headers : {
+                authorization : 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
+            }
+        };
+        
+        return auth.getToken(req)
+            .then((retorno)=>{
+                if (retorno !== 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'){
+                    throw new Error("Retornou valor errado");
+                }
+            })
+            .catch((e)=>{
+                throw e;
+            })
+        
     });
 
 });

@@ -10,21 +10,27 @@ Um módulo de autenticação via JWT
 
 ### Example
 
+auth.js
 
 ```js
 const auth = require('auth-jwt');
 
-var auth = (req, res, next) => {
+let auth = (req, res, next) => {
     auth.verify(req, 'secretKey')
         .then((user)=>{
             req.user = user;
             next()
         })
-        .catch((e)=>{
-            res.sendStatus(401);
-        })
+        .catch((e) => res.sendStatus(401) )
 }
 
+app.get('/user', auth, (req, res) =>{
+    ...
+})
+```
+
+routes.js
+```js
 app.get('/user', auth, (req, res) =>{
     ...
 })
@@ -39,6 +45,22 @@ Inclua o token criado pelo JWT no header das requisições
 or 
 
     Authorization: Bearer JSON_WEB_TOKEN_STRING.....
+
+
+### Get token in requests
+
+```js
+const auth = require('auth-jwt');
+
+let auth = (req, res, next) => {
+    auth.getToken(req)
+        .then((user)=>{
+            console.log(token);
+        })
+        .catch((e) => console.log(e) )
+}
+
+```
 
 ## Tests
 
