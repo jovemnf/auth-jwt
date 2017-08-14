@@ -1,6 +1,6 @@
 # auth-jwt
 
-Um módulo de autenticação via JWT
+> Um módulo de autenticação via JWT
 
 ## Install
 

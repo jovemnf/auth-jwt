@@ -64,7 +64,7 @@ describe('Verify', () => {
 
     });
 
-    it('precisa ser JWT ou Bearer para funcionar - Teste Bearer', function() {
+    it('precisa ser JWT ou Bearer para funcionar - teste Bearer', function() {
 
         let req = {
             headers : {
