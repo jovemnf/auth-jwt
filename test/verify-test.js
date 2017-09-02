@@ -1,5 +1,4 @@
 let auth = require('../index');
-
 let assert = require('assert');
 let expect = require('chai').expect;
 
@@ -10,7 +9,7 @@ describe('Verify', () => {
         assert.equal(auth.getAuthHeader(),'authorization');
     });*/
 
-    it('precisa ser falso para funcionar', () => {
+    it('needs to be false to work', () => {
 
         let req = {
             headers : {}
@@ -26,7 +25,7 @@ describe('Verify', () => {
 
     });
 
-    it('precisa ser verdadeiro para funcionar', () => {
+    it('needs to be true to work', () => {
     
         let req = {
             headers : {
@@ -46,7 +45,7 @@ describe('Verify', () => {
 
     });
 
-    it('precisa ser JWT ou Bearer para funcionar - teste JWT', () => {
+    it('needs to be JWT or Bearer to work - JWT', () => {
 
         let req = {
             headers : {
@@ -55,7 +54,7 @@ describe('Verify', () => {
         };
 
         return auth.verify(req, 'xxx')
-            .then((retorno)=>{
+            .then(() => {
                 throw new Error("Valor errado retornado!")
             })
             .catch((e)=>{
@@ -64,7 +63,7 @@ describe('Verify', () => {
 
     });
 
-    it('precisa ser JWT ou Bearer para funcionar - teste Bearer', function() {
+    it('needs to be JWT or Bearer to work - Bearer', function() {
 
         let req = {
             headers : {
@@ -84,7 +83,7 @@ describe('Verify', () => {
 
     });
     
-    it('precisa ser verdadeiro para funcionar com getToken', () => {
+    it('needs to be true to work with getToken', () => {
         
         let req = {
             headers : {

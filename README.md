@@ -1,6 +1,6 @@
 # auth-jwt
 
-> Um módulo de autenticação via JWT
+> An authentication module using JWT
 
 ## Install
 
@@ -38,7 +38,7 @@ app.get('/user', auth, (req, res) =>{
 
 ### Include the JWT or Bearer in requests
 
-Inclua o token criado pelo JWT no header das requisições
+Include the token created by JWT in the request header
 
     Authorization: JWT JSON_WEB_TOKEN_STRING.....
 
