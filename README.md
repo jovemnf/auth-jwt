@@ -24,14 +24,14 @@ let auth = (req, res, next) => {
         .catch((e) => res.sendStatus(401) )
 }
 
-app.get('/user', auth, (req, res) =>{
+app.get('/user', auth, (req, res) => {
     ...
 })
 ```
 
 routes.js
 ```js
-app.get('/user', auth, (req, res) =>{
+app.get('/user', auth, (req, res) => {
     ...
 })
 ```
@@ -58,6 +58,22 @@ let auth = (req, res, next) => {
             console.log(token);
         })
         .catch((e) => console.log(e) )
+}
+
+```
+
+### Async / Await
+
+```js
+const auth = require('auth-jwt');
+
+module.exports = async (req, res, next) => {
+    try {
+        req.user = await auth.verify(req, 'secretKey');
+        next();
+    } catch {
+        res.status(401).json({code: 401});
+    }
 }
 
 ```
