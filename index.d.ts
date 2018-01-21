@@ -1,4 +1,4 @@
 declare module "auth-jwt" {
-    export function verify(req: any, secret: string): object;
-    export function getToken(req: string): object;
+    export function verify(req: any, secret: string): Promise<object>;
+    export function getToken(req: string): Promise<object>;
 }

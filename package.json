@@ -1,6 +1,6 @@
 {
   "name": "auth-jwt",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Biblioteca de autenticação simples via JWT",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "author": "Wallace Silva <wsilvasjb@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "jwt-simple": "^0.4.1"
+    "jwt-simple": "^0.5.1"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "assert": "^1.4.1",
-    "chai": "^3.5.0",
-    "mocha": "^2.4.5"
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0"
   }
 }

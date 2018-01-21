@@ -2,12 +2,10 @@ let auth = require('../index');
 let assert = require('assert');
 let expect = require('chai').expect;
 
-describe('Verify', () => {
+const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4";
+const secretKey = 'xxx';
 
-    /*
-    it('should be named authorization', function() {
-        assert.equal(auth.getAuthHeader(),'authorization');
-    });*/
+describe('Verify', () => {
 
     it('needs to be false to work', () => {
 
@@ -16,7 +14,7 @@ describe('Verify', () => {
         };
 
         auth.verify(req, null)
-            .then(()=>{
+            .then(() => {
                 throw new Error("Retornou verdadeiro");
             })
             .catch((e)=>{
@@ -26,15 +24,15 @@ describe('Verify', () => {
     });
 
     it('needs to be true to work', () => {
-    
+
         let req = {
             headers : {
-                authorization : 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
+                authorization : 'JWT ' + token
             }
         };
 
-        return auth.verify(req, 'xxx')
-            .then((retorno)=>{
+        return auth.verify(req, secretKey)
+            .then((retorno) => {
                 if (retorno.foo !== 'bar'){
                     throw new Error("Retornou valor errado");
                 }
@@ -49,11 +47,11 @@ describe('Verify', () => {
 
         let req = {
             headers : {
-                authorization : 'jwt eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
+                authorization : 'jwt ' + token
             }
         };
 
-        return auth.verify(req, 'xxx')
+        return auth.verify(req, secretKey)
             .then(() => {
                 throw new Error("Valor errado retornado!")
             })
@@ -67,11 +65,11 @@ describe('Verify', () => {
 
         let req = {
             headers : {
-                authorization : 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
+                authorization : 'Bearer ' + token
             }
         };
 
-        return auth.verify(req, 'xxx')
+        return auth.verify(req, secretKey)
             .then((retorno)=>{
                 if (retorno.foo !== 'bar'){
                     throw new Error("Retornou valor errado");
@@ -87,13 +85,13 @@ describe('Verify', () => {
         
         let req = {
             headers : {
-                authorization : 'JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'
+                authorization : 'JWT ' + token
             }
         };
         
         return auth.getToken(req)
             .then((retorno)=>{
-                if (retorno !== 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4'){
+                if (retorno !== token){
                     throw new Error("Retornou valor errado");
                 }
             })
