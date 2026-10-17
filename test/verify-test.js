@@ -1,5 +1,6 @@
 const auth = require("../index");
 const expect = require("chai").expect;
+const jwt = require("jwt-simple");
 
 const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4";
 const secretKey = "xxx";
@@ -88,5 +89,34 @@ describe("Verify", () => {
         const payload = await auth.checkToken(token, secretKey);
 
         expect(payload).to.deep.equal({ foo: "bar" });
+    });
+
+    it("rejects tokens signed with a different secret", async () => {
+        const tokenWithDifferentSecret = jwt.encode({ foo: "bar" }, "another-secret");
+
+        await expectError(
+            auth.checkToken(tokenWithDifferentSecret, secretKey),
+            "Signature verification failed"
+        );
+    });
+
+    it("rejects tampered tokens", async () => {
+        const tamperedToken = token.slice(0, -1) + (token.slice(-1) === "a" ? "b" : "a");
+
+        await expectError(auth.checkToken(tamperedToken, secretKey), "Signature verification failed");
+    });
+
+    it("rejects malformed jwt strings", async () => {
+        await expectError(auth.checkToken("not-a-jwt", secretKey), "Not enough or too many segments");
+    });
+
+    it("rejects authorization headers with extra segments", async () => {
+        const req = {
+            headers: {
+                authorization: "Bearer " + token + " extra"
+            }
+        };
+
+        await expectError(auth.getToken(req), "Invalid authorization header");
     });
 });
