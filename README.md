@@ -8,6 +8,8 @@
 npm install auth-jwt
 ```
 
+Requires Node.js 8 or newer.
+
 ## Usage
 
 ### Verify a request token
