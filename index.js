@@ -1,7 +1,1 @@
-const verify = require("./lib/verify");
-
-module.exports = {
-    verify: verify.verify,
-    getToken: verify.getToken,
-    checkToken: verify.checkToken
-};
+module.exports = require("./lib/verify");

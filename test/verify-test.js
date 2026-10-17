@@ -1,104 +1,122 @@
-let auth = require('../index');
-let assert = require('assert');
-let expect = require('chai').expect;
+const auth = require("../index");
+const expect = require("chai").expect;
+const jwt = require("jwt-simple");
 
 const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmb28iOiJiYXIifQ.yPmf5QFV26W-3ldVCrsvRdnecy7QjA0fnCWCDLDZ-M4";
-const secretKey = 'xxx';
+const secretKey = "xxx";
 
-describe('Verify', () => {
+const expectError = async (promise, expectedMessage) => {
+    try {
+        await promise;
+        throw new Error("Expected promise to be rejected");
+    } catch (error) {
+        expect(error).to.be.instanceOf(Error);
+        expect(error.message).to.equal(expectedMessage);
+    }
+};
 
-    it('needs to be false to work', () => {
-
-        let req = {
-            headers : {}
+describe("Verify", () => {
+    it("rejects missing authorization headers", async () => {
+        const req = {
+            headers: {}
         };
 
-        auth.verify(req, null)
-            .then(() => {
-                throw new Error("Retornou verdadeiro");
-            })
-            .catch((e)=>{
-                expect(e.name).to.equal("Error");
-            })
-
+        await expectError(auth.verify(req, null), "Undefined authorization header");
     });
 
-    it('needs to be true to work', () => {
-
-        let req = {
-            headers : {
-                authorization : 'JWT ' + token
+    it("verifies a valid JWT token", async () => {
+        const req = {
+            headers: {
+                authorization: "JWT " + token
             }
         };
 
-        return auth.verify(req, secretKey)
-            .then((retorno) => {
-                if (retorno.foo !== 'bar'){
-                    throw new Error("Retornou valor errado");
-                }
-            })
-            .catch((e)=>{
-                throw e;
-            })
+        const payload = await auth.verify(req, secretKey);
 
+        expect(payload).to.deep.equal({ foo: "bar" });
+        expect(req.token).to.equal(token);
     });
 
-    it('needs to be JWT or Bearer to work - JWT', () => {
-
-        let req = {
-            headers : {
-                authorization : 'jwt ' + token
+    it("accepts the Authorization header with capital A", async () => {
+        const req = {
+            headers: {
+                Authorization: "Bearer " + token
             }
         };
 
-        return auth.verify(req, secretKey)
-            .then(() => {
-                throw new Error("Valor errado retornado!")
-            })
-            .catch((e)=>{
-                assert.equal(e.name,'Error');
-            })
+        const payload = await auth.verify(req, secretKey);
 
+        expect(payload).to.deep.equal({ foo: "bar" });
     });
 
-    it('needs to be JWT or Bearer to work - Bearer', function() {
-
-        let req = {
-            headers : {
-                authorization : 'Bearer ' + token
+    it("rejects unsupported authorization schemes", async () => {
+        const req = {
+            headers: {
+                authorization: "jwt " + token
             }
         };
 
-        return auth.verify(req, secretKey)
-            .then((retorno)=>{
-                if (retorno.foo !== 'bar'){
-                    throw new Error("Retornou valor errado");
-                }
-            })
-            .catch((e)=>{
-                throw e;
-            })
-
+        await expectError(auth.verify(req, secretKey), "Invalid authorization header");
     });
-    
-    it('needs to be true to work with getToken', () => {
-        
-        let req = {
-            headers : {
-                authorization : 'JWT ' + token
+
+    it("rejects malformed authorization headers", async () => {
+        const req = {
+            headers: {
+                authorization: "Bearer"
             }
         };
-        
-        return auth.getToken(req)
-            .then((retorno)=>{
-                if (retorno !== token){
-                    throw new Error("Retornou valor errado");
-                }
-            })
-            .catch((e)=>{
-                throw e;
-            })
-        
+
+        await expectError(auth.getToken(req), "Invalid authorization header");
     });
 
+    it("returns the token from getToken", async () => {
+        const req = {
+            headers: {
+                authorization: "JWT " + token
+            }
+        };
+
+        const returnedToken = await auth.getToken(req);
+
+        expect(returnedToken).to.equal(token);
+    });
+
+    it("rejects invalid request objects", async () => {
+        await expectError(auth.getToken(null), "Request headers are required");
+    });
+
+    it("decodes tokens directly with checkToken", async () => {
+        const payload = await auth.checkToken(token, secretKey);
+
+        expect(payload).to.deep.equal({ foo: "bar" });
+    });
+
+    it("rejects tokens signed with a different secret", async () => {
+        const tokenWithDifferentSecret = jwt.encode({ foo: "bar" }, "another-secret");
+
+        await expectError(
+            auth.checkToken(tokenWithDifferentSecret, secretKey),
+            "Signature verification failed"
+        );
+    });
+
+    it("rejects tampered tokens", async () => {
+        const tamperedToken = token.slice(0, -1) + (token.slice(-1) === "a" ? "b" : "a");
+
+        await expectError(auth.checkToken(tamperedToken, secretKey), "Signature verification failed");
+    });
+
+    it("rejects malformed jwt strings", async () => {
+        await expectError(auth.checkToken("not-a-jwt", secretKey), "Not enough or too many segments");
+    });
+
+    it("rejects authorization headers with extra segments", async () => {
+        const req = {
+            headers: {
+                authorization: "Bearer " + token + " extra"
+            }
+        };
+
+        await expectError(auth.getToken(req), "Invalid authorization header");
+    });
 });
