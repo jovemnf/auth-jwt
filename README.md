@@ -4,84 +4,106 @@
 
 ## Install
 
-    npm install auth-jwt
+```bash
+npm install auth-jwt
+```
 
 ## Usage
 
-### Example
-
-auth.js
+### Verify a request token
 
 ```js
-const auth = require('auth-jwt');
+const authJwt = require("auth-jwt");
 
-let auth = (req, res, next) => {
-    auth.verify(req, 'secretKey')
-        .then((user)=>{
-            req.user = user;
-            next()
-        })
-        .catch((e) => res.sendStatus(401) )
-}
-
-app.get('/user', auth, (req, res) => {
-    ...
-})
-```
-
-routes.js
-```js
-app.get('/user', auth, (req, res) => {
-    ...
-})
-```
-
-### Include the JWT or Bearer in requests
-
-Include the token created by JWT in the request header
-
-    Authorization: JWT JSON_WEB_TOKEN_STRING.....
-
-or 
-
-    Authorization: Bearer JSON_WEB_TOKEN_STRING.....
-
-
-### Get token in requests
-
-```js
-const auth = require('auth-jwt');
-
-let auth = (req, res, next) => {
-    auth.getToken(req)
-        .then((user)=>{
-            console.log(token);
-        })
-        .catch((e) => console.log(e) )
-}
-
-```
-
-### Async / Await
-
-```js
-const auth = require('auth-jwt');
-
-module.exports = async (req, res, next) => {
+const requireAuth = async (req, res, next) => {
     try {
-        req.user = await auth.verify(req, 'secretKey');
+        req.user = await authJwt.verify(req, "secretKey");
         next();
-    } catch {
-        res.status(401).json({code: 401});
+    } catch (error) {
+        res.sendStatus(401);
     }
-}
+};
 
+app.get("/user", requireAuth, (req, res) => {
+    res.json(req.user);
+});
 ```
+
+### Include the token in requests
+
+Send the token in the `Authorization` header using one of the supported schemes:
+
+```http
+Authorization: JWT JSON_WEB_TOKEN_STRING
+```
+
+or
+
+```http
+Authorization: Bearer JSON_WEB_TOKEN_STRING
+```
+
+### Get the token without decoding it
+
+```js
+const authJwt = require("auth-jwt");
+
+const handler = async (req, res) => {
+    try {
+        const token = await authJwt.getToken(req);
+        res.json({ token });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+```
+
+### Decode an existing token
+
+```js
+const authJwt = require("auth-jwt");
+
+const handler = async (req, res) => {
+    try {
+        const payload = await authJwt.checkToken(req.token, "secretKey");
+        res.json(payload);
+    } catch (error) {
+        res.status(401).json({ message: error.message });
+    }
+};
+```
+
+## API
+
+### `verify(req, secret)`
+
+- Extracts the token from `req.headers.authorization` or `req.headers.Authorization`
+- Accepts only `JWT <token>` or `Bearer <token>`
+- Stores the extracted token in `req.token`
+- Resolves with the decoded payload
+
+### `getToken(req)`
+
+- Returns only the token string extracted from the authorization header
+
+### `checkToken(token, secret)`
+
+- Decodes a token that you already have available
+
+## Errors
+
+The package rejects the promise with an `Error` in the following cases:
+
+- `Request headers are required`
+- `Undefined authorization header`
+- `Invalid authorization header`
 
 ## Tests
 
-    npm install
-    npm test
+```bash
+npm install
+npm test
+```
 
 ## License
 

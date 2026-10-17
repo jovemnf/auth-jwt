@@ -3,6 +3,12 @@
   "version": "1.0.6",
   "description": "Biblioteca de autenticação simples via JWT",
   "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib"
+  ],
   "scripts": {
     "test": "mocha test/*.js"
   },
@@ -18,7 +24,7 @@
   "keywords": [
     "JSON",
     "JWT",
-    "Autenticate",
+    "Authenticate",
     "Token",
     "Web",
     "Bearer"
